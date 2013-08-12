@@ -1,9 +1,9 @@
 diff '--exclude=*.orig' -urN vim73.orig/runtime/doc/eval.txt vim73/runtime/doc/eval.txt
-Index: b/runtime/doc/eval.txt
+Index: macvim/runtime/doc/eval.txt
 ===================================================================
---- a/runtime/doc/eval.txt
-+++ b/runtime/doc/eval.txt
-@@ -6359,8 +6359,8 @@ jumplist		Compiled with |jumplist| suppo
+--- macvim.orig/runtime/doc/eval.txt
++++ macvim/runtime/doc/eval.txt
+@@ -6409,8 +6409,8 @@ jumplist		Compiled with |jumplist| suppo
  keymap			Compiled with 'keymap' support.
  langmap			Compiled with 'langmap' support.
  libcall			Compiled with |libcall()| support.
@@ -14,15 +14,15 @@ Index: b/runtime/doc/eval.txt
  lispindent		Compiled with support for lisp indenting.
  listcmds		Compiled with commands for the buffer list |:files|
  			and the argument list |arglist|.
-Index: b/runtime/doc/options.txt
+Index: macvim/runtime/doc/options.txt
 ===================================================================
---- a/runtime/doc/options.txt
-+++ b/runtime/doc/options.txt
-@@ -1196,6 +1196,39 @@ A jump table for the options with a shor
+--- macvim.orig/runtime/doc/options.txt
++++ macvim/runtime/doc/options.txt
+@@ -1205,6 +1205,39 @@ A jump table for the options with a shor
  	break if 'linebreak' is on.  Only works for ASCII and also for 8-bit
  	characters when 'encoding' is an 8-bit encoding.
  
-+	
++
 +						*'breakindent'* *'bri'*
 +'breakindent' 'bri'	boolean (default off)
 +			local to window
@@ -58,7 +58,7 @@ Index: b/runtime/doc/options.txt
  						*'browsedir'* *'bsdir'*
  'browsedir' 'bsdir'	string	(default: "last")
  			global
-@@ -4611,12 +4644,13 @@ A jump table for the options with a shor
+@@ -4674,12 +4707,13 @@ A jump table for the options with a shor
  			{not in Vi}
  			{not available when compiled without the |+linebreak|
  			feature}
@@ -76,10 +76,10 @@ Index: b/runtime/doc/options.txt
  	Note that <Tab> characters after an <EOL> are mostly not displayed
  	with the right amount of white space.
  
-Index: b/runtime/doc/tags
+Index: macvim/runtime/doc/tags
 ===================================================================
---- a/runtime/doc/tags
-+++ b/runtime/doc/tags
+--- macvim.orig/runtime/doc/tags
++++ macvim/runtime/doc/tags
 @@ -90,6 +90,12 @@ $VIMRUNTIME	starting.txt	/*$VIMRUNTIME*
  'bl'	options.txt	/*'bl'*
  'bomb'	options.txt	/*'bomb'*
@@ -93,11 +93,11 @@ Index: b/runtime/doc/tags
  'brk'	options.txt	/*'brk'*
  'browsedir'	options.txt	/*'browsedir'*
  'bs'	options.txt	/*'bs'*
-Index: b/runtime/optwin.vim
+Index: macvim/runtime/optwin.vim
 ===================================================================
---- a/runtime/optwin.vim
-+++ b/runtime/optwin.vim
-@@ -322,6 +322,15 @@ call <SID>BinOptionG("wrap", &wrap)
+--- macvim.orig/runtime/optwin.vim
++++ macvim/runtime/optwin.vim
+@@ -324,6 +324,15 @@ call <SID>BinOptionG("wrap", &wrap)
  call append("$", "linebreak\twrap long lines at a character in 'breakat'")
  call append("$", "\t(local to window)")
  call <SID>BinOptionL("lbr")
@@ -113,11 +113,11 @@ Index: b/runtime/optwin.vim
  call append("$", "breakat\twhich characters might cause a line break")
  call <SID>OptionG("brk", &brk)
  call append("$", "showbreak\tstring to put before wrapped screen lines")
-Index: b/src/charset.c
+Index: macvim/src/charset.c
 ===================================================================
---- a/src/charset.c
-+++ b/src/charset.c
-@@ -847,24 +847,26 @@ win_chartabsize(wp, p, col)
+--- macvim.orig/src/charset.c
++++ macvim/src/charset.c
+@@ -852,24 +852,26 @@ win_chartabsize(wp, p, col)
   * taking into account the size of a tab.
   */
      int
@@ -148,7 +148,7 @@ Index: b/src/charset.c
      return (int)col;
  }
  
-@@ -872,16 +874,17 @@ linetabsize_col(startcol, s)
+@@ -877,16 +879,17 @@ linetabsize_col(startcol, s)
   * Like linetabsize(), but for a given window instead of the current one.
   */
      int
@@ -168,7 +168,7 @@ Index: b/src/charset.c
      return (int)col;
  }
  
-@@ -1010,12 +1013,13 @@ vim_isprintc_strict(c)
+@@ -1021,12 +1024,13 @@ vim_isprintc_strict(c)
   * like chartabsize(), but also check for line breaks on the screen
   */
      int
@@ -184,7 +184,7 @@ Index: b/src/charset.c
      {
  #endif
  #ifdef FEAT_MBYTE
-@@ -1025,7 +1029,7 @@ lbr_chartabsize(s, col)
+@@ -1036,7 +1040,7 @@ lbr_chartabsize(s, col)
  	RET_WIN_BUF_CHARTABSIZE(curwin, curbuf, s, col)
  #ifdef FEAT_LINEBREAK
      }
@@ -193,7 +193,7 @@ Index: b/src/charset.c
  #endif
  }
  
-@@ -1033,13 +1037,14 @@ lbr_chartabsize(s, col)
+@@ -1044,13 +1048,14 @@ lbr_chartabsize(s, col)
   * Call lbr_chartabsize() and advance the pointer.
   */
      int
@@ -210,7 +210,7 @@ Index: b/src/charset.c
      mb_ptr_adv(*s);
      return retval;
  }
-@@ -1050,13 +1055,17 @@ lbr_chartabsize_adv(s, col)
+@@ -1061,13 +1066,17 @@ lbr_chartabsize_adv(s, col)
   * If "headp" not NULL, set *headp to the size of what we for 'showbreak'
   * string at start of line.  Warning: *headp is only set if it's a non-zero
   * value, init to 0 before calling.
@@ -229,7 +229,7 @@ Index: b/src/charset.c
  {
  #ifdef FEAT_LINEBREAK
      int		c;
-@@ -1075,9 +1084,9 @@ win_lbr_chartabsize(wp, s, col, headp)
+@@ -1086,9 +1095,9 @@ win_lbr_chartabsize(wp, s, col, headp)
      int		n;
  
      /*
@@ -241,7 +241,7 @@ Index: b/src/charset.c
  #endif
      {
  #ifdef FEAT_MBYTE
-@@ -1152,11 +1161,12 @@ win_lbr_chartabsize(wp, s, col, headp)
+@@ -1163,11 +1172,12 @@ win_lbr_chartabsize(wp, s, col, headp)
  # endif
  
      /*
@@ -256,7 +256,7 @@ Index: b/src/charset.c
      {
  	numberextra = win_col_off(wp);
  	col += numberextra + mb_added;
-@@ -1169,7 +1179,12 @@ win_lbr_chartabsize(wp, s, col, headp)
+@@ -1180,7 +1190,12 @@ win_lbr_chartabsize(wp, s, col, headp)
  	}
  	if (col == 0 || col + size > (colnr_T)W_WIDTH(wp))
  	{
@@ -270,7 +270,7 @@ Index: b/src/charset.c
  	    if (tab_corr)
  		size += (added / wp->w_buffer->b_p_ts) * wp->w_buffer->b_p_ts;
  	    else
-@@ -1277,12 +1292,13 @@ getvcol(wp, pos, start, cursor, end)
+@@ -1288,12 +1303,13 @@ getvcol(wp, pos, start, cursor, end)
  
      /*
       * This function is used very often, do some speed optimizations.
@@ -286,7 +286,7 @@ Index: b/src/charset.c
  #endif
         )
      {
-@@ -1344,7 +1360,7 @@ getvcol(wp, pos, start, cursor, end)
+@@ -1355,7 +1371,7 @@ getvcol(wp, pos, start, cursor, end)
  	{
  	    /* A tab gets expanded, depending on the current column */
  	    head = 0;
@@ -295,11 +295,11 @@ Index: b/src/charset.c
  	    /* make sure we don't go past the end of the line */
  	    if (*ptr == NUL)
  	    {
-Index: b/src/edit.c
+Index: macvim/src/edit.c
 ===================================================================
---- a/src/edit.c
-+++ b/src/edit.c
-@@ -405,7 +405,7 @@ edit(cmdchar, startln, count)
+--- macvim.orig/src/edit.c
++++ macvim/src/edit.c
+@@ -428,7 +428,7 @@ edit(cmdchar, startln, count)
  	if (startln)
  	    Insstart.col = 0;
      }
@@ -308,7 +308,7 @@ Index: b/src/edit.c
      Insstart_blank_vcol = MAXCOL;
      if (!did_ai)
  	ai_col = 0;
-@@ -1923,7 +1923,7 @@ change_indent(type, amount, round, repla
+@@ -1961,7 +1961,7 @@ change_indent(type, amount, round, repla
  	    else
  #endif
  		++new_cursor_col;
@@ -317,7 +317,7 @@ Index: b/src/edit.c
  	}
  	vcol = last_vcol;
  
-@@ -6716,7 +6716,7 @@ stop_arrow()
+@@ -6758,7 +6758,7 @@ stop_arrow()
  	    ins_need_undo = FALSE;
  	}
  	Insstart = curwin->w_cursor;	/* new insertion starts here */
@@ -326,7 +326,7 @@ Index: b/src/edit.c
  	ai_col = 0;
  #ifdef FEAT_VREPLACE
  	if (State & VREPLACE_FLAG)
-@@ -7071,9 +7071,10 @@ oneleft()
+@@ -7113,9 +7113,10 @@ oneleft()
  	for (;;)
  	{
  	    coladvance(v - width);
@@ -340,7 +340,7 @@ Index: b/src/edit.c
  #  ifdef FEAT_MBYTE
  			&& !has_mbyte
  #  endif
-@@ -9728,11 +9729,11 @@ ins_tab()
+@@ -9774,11 +9775,11 @@ ins_tab()
  	getvcol(curwin, &fpos, &vcol, NULL, NULL);
  	getvcol(curwin, cursor, &want_vcol, NULL, NULL);
  
@@ -354,7 +354,7 @@ Index: b/src/edit.c
  	    if (vcol + i > want_vcol)
  		break;
  	    if (*ptr != TAB)
-@@ -9758,7 +9759,7 @@ ins_tab()
+@@ -9804,7 +9805,7 @@ ins_tab()
  	    /* Skip over the spaces we need. */
  	    while (vcol < want_vcol && *ptr == ' ')
  	    {
@@ -363,7 +363,7 @@ Index: b/src/edit.c
  		++ptr;
  		++repl_off;
  	    }
-@@ -10014,7 +10015,7 @@ ins_copychar(lnum)
+@@ -10060,7 +10061,7 @@ ins_copychar(lnum)
      while ((colnr_T)temp < curwin->w_virtcol && *ptr != NUL)
      {
  	prev_ptr = ptr;
@@ -372,11 +372,11 @@ Index: b/src/edit.c
      }
      if ((colnr_T)temp > curwin->w_virtcol)
  	ptr = prev_ptr;
-Index: b/src/eval.c
+Index: macvim/src/eval.c
 ===================================================================
---- a/src/eval.c
-+++ b/src/eval.c
-@@ -17409,8 +17409,11 @@ f_strdisplaywidth(argvars, rettv)
+--- macvim.orig/src/eval.c
++++ macvim/src/eval.c
+@@ -17594,8 +17594,11 @@ f_strdisplaywidth(argvars, rettv)
  
      if (argvars[1].v_type != VAR_UNKNOWN)
  	col = get_tv_number(&argvars[1]);
@@ -386,14 +386,14 @@ Index: b/src/eval.c
 +     * FIXME: passing 0 as 3rd argument to linetabsize_col, instead of real line number;
 +     * (can we get it from here somehow?); might give incorrect result with breakindent!
 +     */
-+    rettv->vval.v_number = (varnumber_T)(linetabsize_col(col, s, 0) - col); 
++    rettv->vval.v_number = (varnumber_T)(linetabsize_col(col, s, 0) - col);
  }
  
  /*
-Index: b/src/ex_cmds.c
+Index: macvim/src/ex_cmds.c
 ===================================================================
---- a/src/ex_cmds.c
-+++ b/src/ex_cmds.c
+--- macvim.orig/src/ex_cmds.c
++++ macvim/src/ex_cmds.c
 @@ -261,7 +261,7 @@ linelen(has_tab)
  	;
      save = *last;
@@ -403,11 +403,11 @@ Index: b/src/ex_cmds.c
      if (has_tab != NULL)		/* check for embedded TAB */
  	*has_tab = (vim_strrchr(first, TAB) != NULL);
      *last = save;
-Index: b/src/getchar.c
+Index: macvim/src/getchar.c
 ===================================================================
---- a/src/getchar.c
-+++ b/src/getchar.c
-@@ -2619,7 +2619,7 @@ vgetorpeek(advance)
+--- macvim.orig/src/getchar.c
++++ macvim/src/getchar.c
+@@ -2633,7 +2633,7 @@ vgetorpeek(advance)
  				    if (!vim_iswhite(ptr[col]))
  					curwin->w_wcol = vcol;
  				    vcol += lbr_chartabsize(ptr + col,
@@ -416,10 +416,10 @@ Index: b/src/getchar.c
  #ifdef FEAT_MBYTE
  				    if (has_mbyte)
  					col += (*mb_ptr2len)(ptr + col);
-Index: b/src/gui_beval.c
+Index: macvim/src/gui_beval.c
 ===================================================================
---- a/src/gui_beval.c
-+++ b/src/gui_beval.c
+--- macvim.orig/src/gui_beval.c
++++ macvim/src/gui_beval.c
 @@ -335,7 +335,7 @@ get_beval_info(beval, getword, winp, lnu
  	{
  	    /* Not past end of the file. */
@@ -429,17 +429,17 @@ Index: b/src/gui_beval.c
  	    {
  		/* Not past end of line. */
  		if (getword)
-Index: b/src/misc1.c
+Index: macvim/src/misc1.c
 ===================================================================
---- a/src/misc1.c
-+++ b/src/misc1.c
-@@ -465,6 +465,44 @@ get_number_indent(lnum)
+--- macvim.orig/src/misc1.c
++++ macvim/src/misc1.c
+@@ -468,6 +468,44 @@ get_number_indent(lnum)
      return (int)col;
  }
  
 +#ifdef FEAT_LINEBREAK
-+/* 
-+ * Return appropriate space number for breakindent, taking influencing 
++/*
++ * Return appropriate space number for breakindent, taking influencing
 + * parameters into account. Window must be specified, since it is not
 + * necessarily always the current one. If lnum==0, current line is calculated,
 + * specified line otherwise.
@@ -461,7 +461,7 @@ Index: b/src/misc1.c
 +    /* (this could be replaced by an equivalent call to win_col_off2()) */
 +    if (curwin->w_p_nu && vim_strchr(p_cpo, CPO_NUMCOL))
 +	bri += number_width(wp);
-+    
++
 +    /* never indent past left window margin */
 +    if (bri < 0)
 +	bri = 0;
@@ -478,7 +478,7 @@ Index: b/src/misc1.c
  #if defined(FEAT_CINDENT) || defined(FEAT_SMARTINDENT)
  
  static int cin_is_cinword __ARGS((char_u *line));
-@@ -1947,7 +1985,7 @@ plines_win_nofold(wp, lnum)
+@@ -1950,7 +1988,7 @@ plines_win_nofold(wp, lnum)
      s = ml_get_buf(wp->w_buffer, lnum, FALSE);
      if (*s == NUL)		/* empty line */
  	return 1;
@@ -487,7 +487,7 @@ Index: b/src/misc1.c
  
      /*
       * If list mode is on, then the '$' at the end of the line may take up one
-@@ -2003,7 +2041,7 @@ plines_win_col(wp, lnum, column)
+@@ -2006,7 +2044,7 @@ plines_win_col(wp, lnum, column)
      col = 0;
      while (*s != NUL && --column >= 0)
      {
@@ -496,7 +496,7 @@ Index: b/src/misc1.c
  	mb_ptr_adv(s);
      }
  
-@@ -2015,7 +2053,7 @@ plines_win_col(wp, lnum, column)
+@@ -2018,7 +2056,7 @@ plines_win_col(wp, lnum, column)
       * 'ts') -- webb.
       */
      if (*s == TAB && (State & NORMAL) && (!wp->w_p_list || lcs_tab1))
@@ -505,7 +505,7 @@ Index: b/src/misc1.c
  
      /*
       * Add column offset for 'number', 'relativenumber', 'foldcolumn', etc.
-@@ -8978,7 +9016,7 @@ get_lisp_indent()
+@@ -9055,7 +9093,7 @@ get_lisp_indent()
  		amount = 0;
  		while (*that && col)
  		{
@@ -514,7 +514,7 @@ Index: b/src/misc1.c
  		    col--;
  		}
  
-@@ -9001,7 +9039,7 @@ get_lisp_indent()
+@@ -9078,7 +9116,7 @@ get_lisp_indent()
  
  		    while (vim_iswhite(*that))
  		    {
@@ -523,7 +523,7 @@ Index: b/src/misc1.c
  			++that;
  		    }
  
-@@ -9040,14 +9078,14 @@ get_lisp_indent()
+@@ -9117,14 +9155,14 @@ get_lisp_indent()
  				    --parencount;
  				if (*that == '\\' && *(that+1) != NUL)
  				    amount += lbr_chartabsize_adv(&that,
@@ -541,10 +541,10 @@ Index: b/src/misc1.c
  			    that++;
  			}
  			if (!*that || *that == ';')
-Index: b/src/misc2.c
+Index: macvim/src/misc2.c
 ===================================================================
---- a/src/misc2.c
-+++ b/src/misc2.c
+--- macvim.orig/src/misc2.c
++++ macvim/src/misc2.c
 @@ -166,7 +166,7 @@ coladvance2(pos, addspaces, finetune, wc
  #ifdef FEAT_VIRTUALEDIT
  	    if ((addspaces || finetune) && !VIsual_active)
@@ -576,11 +576,11 @@ Index: b/src/misc2.c
  #endif
  	    col += csize;
  	}
-Index: b/src/normal.c
+Index: macvim/src/normal.c
 ===================================================================
---- a/src/normal.c
-+++ b/src/normal.c
-@@ -4500,7 +4500,7 @@ nv_screengo(oap, dir, dist)
+--- macvim.orig/src/normal.c
++++ macvim/src/normal.c
+@@ -4540,7 +4540,7 @@ nv_screengo(oap, dir, dist)
      int		dir;
      long	dist;
  {
@@ -589,7 +589,7 @@ Index: b/src/normal.c
      int		retval = OK;
      int		atend = FALSE;
      int		n;
-@@ -4573,7 +4573,7 @@ nv_screengo(oap, dir, dist)
+@@ -4613,7 +4613,7 @@ nv_screengo(oap, dir, dist)
  		    (void)hasFolding(curwin->w_cursor.lnum,
  						&curwin->w_cursor.lnum, NULL);
  #endif
@@ -598,7 +598,7 @@ Index: b/src/normal.c
  		if (linelen > width1)
  		    curwin->w_curswant += (((linelen - width1 - 1) / width2)
  								+ 1) * width2;
-@@ -4603,7 +4603,7 @@ nv_screengo(oap, dir, dist)
+@@ -4643,7 +4643,7 @@ nv_screengo(oap, dir, dist)
  		}
  		curwin->w_cursor.lnum++;
  		curwin->w_curswant %= width2;
@@ -607,11 +607,11 @@ Index: b/src/normal.c
  	    }
  	}
        }
-Index: b/src/ops.c
+Index: macvim/src/ops.c
 ===================================================================
---- a/src/ops.c
-+++ b/src/ops.c
-@@ -431,7 +431,7 @@ shift_block(oap, amount)
+--- macvim.orig/src/ops.c
++++ macvim/src/ops.c
+@@ -435,7 +435,7 @@ shift_block(oap, amount)
  	}
  	for ( ; vim_iswhite(*bd.textstart); )
  	{
@@ -620,7 +620,7 @@ Index: b/src/ops.c
  	    total += incr;
  	    bd.start_vcol += incr;
  	}
-@@ -491,7 +491,7 @@ shift_block(oap, amount)
+@@ -495,7 +495,7 @@ shift_block(oap, amount)
  
  	while (vim_iswhite(*non_white))
  	{
@@ -629,7 +629,7 @@ Index: b/src/ops.c
  	    non_white_col += incr;
  	}
  
-@@ -516,7 +516,7 @@ shift_block(oap, amount)
+@@ -520,7 +520,7 @@ shift_block(oap, amount)
  	    verbatim_copy_width -= bd.start_char_vcols;
  	while (verbatim_copy_width < destination_col)
  	{
@@ -638,7 +638,7 @@ Index: b/src/ops.c
  	    if (verbatim_copy_width + incr > destination_col)
  		break;
  	    verbatim_copy_width += incr;
-@@ -3592,7 +3592,7 @@ do_put(regname, dir, count, flags)
+@@ -3623,7 +3623,7 @@ do_put(regname, dir, count, flags)
  	    for (ptr = oldp; vcol < col && *ptr; )
  	    {
  		/* Count a tab for what it's worth (if list mode not on) */
@@ -647,7 +647,7 @@ Index: b/src/ops.c
  		vcol += incr;
  	    }
  	    bd.textcol = (colnr_T)(ptr - oldp);
-@@ -3626,7 +3626,7 @@ do_put(regname, dir, count, flags)
+@@ -3657,7 +3657,7 @@ do_put(regname, dir, count, flags)
  	    /* calculate number of spaces required to fill right side of block*/
  	    spaces = y_width + 1;
  	    for (j = 0; j < yanklen; j++)
@@ -656,7 +656,7 @@ Index: b/src/ops.c
  	    if (spaces < 0)
  		spaces = 0;
  
-@@ -5143,7 +5143,7 @@ block_prep(oap, bdp, lnum, is_del)
+@@ -5174,7 +5174,7 @@ block_prep(oap, bdp, lnum, is_del)
      while (bdp->start_vcol < oap->start_vcol && *pstart)
      {
  	/* Count a tab for what it's worth (if list mode not on) */
@@ -665,7 +665,7 @@ Index: b/src/ops.c
  	bdp->start_vcol += incr;
  #ifdef FEAT_VISUALEXTRA
  	if (vim_iswhite(*pstart))
-@@ -5212,7 +5212,7 @@ block_prep(oap, bdp, lnum, is_del)
+@@ -5243,7 +5243,7 @@ block_prep(oap, bdp, lnum, is_del)
  	    {
  		/* Count a tab for what it's worth (if list mode not on) */
  		prev_pend = pend;
@@ -674,7 +674,7 @@ Index: b/src/ops.c
  		bdp->end_vcol += incr;
  	    }
  	    if (bdp->end_vcol <= oap->end_vcol
-@@ -6708,7 +6708,7 @@ cursor_pos_info()
+@@ -6756,7 +6756,7 @@ cursor_pos_info()
  	    validate_virtcol();
  	    col_print(buf1, sizeof(buf1), (int)curwin->w_cursor.col + 1,
  		    (int)curwin->w_virtcol + 1);
@@ -683,10 +683,10 @@ Index: b/src/ops.c
  
  	    if (char_count_cursor == byte_count_cursor
  		    && char_count == byte_count)
-Index: b/src/option.c
+Index: macvim/src/option.c
 ===================================================================
---- a/src/option.c
-+++ b/src/option.c
+--- macvim.orig/src/option.c
++++ macvim/src/option.c
 @@ -190,6 +190,11 @@
  #ifdef FEAT_ARABIC
  # define PV_ARAB	OPT_WIN(WV_ARAB)
@@ -733,7 +733,7 @@ Index: b/src/option.c
      {"browsedir",   "bsdir",P_STRING|P_VI_DEF,
  #ifdef FEAT_BROWSE
  			    (char_u *)&p_bsdir, PV_NONE,
-@@ -8553,6 +8585,16 @@ set_num_option(opt_idx, varp, value, err
+@@ -8608,6 +8640,16 @@ set_num_option(opt_idx, varp, value, err
  	}
  	curwin->w_nrwidth_line_count = 0;
      }
@@ -750,7 +750,7 @@ Index: b/src/option.c
  #endif
  
  #if defined(FEAT_TRANSPARENCY)
-@@ -9799,6 +9841,9 @@ get_varp(p)
+@@ -10075,6 +10117,9 @@ get_varp(p)
  	case PV_WRAP:	return (char_u *)&(curwin->w_p_wrap);
  #ifdef FEAT_LINEBREAK
  	case PV_LBR:	return (char_u *)&(curwin->w_p_lbr);
@@ -760,8 +760,8 @@ Index: b/src/option.c
  #endif
  #ifdef FEAT_SCROLLBIND
  	case PV_SCBIND: return (char_u *)&(curwin->w_p_scb);
-@@ -9988,6 +10033,8 @@ copy_winopt(from, to)
-     to->wo_wrap = from->wo_wrap;
+@@ -10267,6 +10312,8 @@ copy_winopt(from, to)
+ #endif
  #ifdef FEAT_LINEBREAK
      to->wo_lbr = from->wo_lbr;
 +    to->wo_bri = from->wo_bri;
@@ -769,11 +769,11 @@ Index: b/src/option.c
  #endif
  #ifdef FEAT_SCROLLBIND
      to->wo_scb = from->wo_scb;
-Index: b/src/option.h
+Index: macvim/src/option.h
 ===================================================================
---- a/src/option.h
-+++ b/src/option.h
-@@ -1067,6 +1067,11 @@ enum
+--- macvim.orig/src/option.h
++++ macvim/src/option.h
+@@ -1071,6 +1071,11 @@ enum
  #ifdef FEAT_CURSORBIND
      , WV_CRBIND
  #endif
@@ -785,10 +785,10 @@ Index: b/src/option.h
  #ifdef FEAT_DIFF
      , WV_DIFF
  #endif
-Index: b/src/proto/charset.pro
+Index: macvim/src/proto/charset.pro
 ===================================================================
---- a/src/proto/charset.pro
-+++ b/src/proto/charset.pro
+--- macvim.orig/src/proto/charset.pro
++++ macvim/src/proto/charset.pro
 @@ -14,9 +14,9 @@ int ptr2cells __ARGS((char_u *p));
  int vim_strsize __ARGS((char_u *s));
  int vim_strnsize __ARGS((char_u *s, int len));
@@ -801,8 +801,8 @@ Index: b/src/proto/charset.pro
 +int win_linetabsize __ARGS((win_T *wp, char_u *p, colnr_T len, linenr_T lnum));
  int vim_isIDc __ARGS((int c));
  int vim_iswordc __ARGS((int c));
- int vim_iswordp __ARGS((char_u *p));
-@@ -25,9 +25,9 @@ int vim_isfilec __ARGS((int c));
+ int vim_iswordc_buf __ARGS((int c, buf_T *buf));
+@@ -26,9 +26,9 @@ int vim_isfilec __ARGS((int c));
  int vim_isfilec_or_wc __ARGS((int c));
  int vim_isprintc __ARGS((int c));
  int vim_isprintc_strict __ARGS((int c));
@@ -815,10 +815,10 @@ Index: b/src/proto/charset.pro
  int in_win_border __ARGS((win_T *wp, colnr_T vcol));
  void getvcol __ARGS((win_T *wp, pos_T *pos, colnr_T *start, colnr_T *cursor, colnr_T *end));
  colnr_T getvcol_nolist __ARGS((pos_T *posp));
-Index: b/src/proto/misc1.pro
+Index: macvim/src/proto/misc1.pro
 ===================================================================
---- a/src/proto/misc1.pro
-+++ b/src/proto/misc1.pro
+--- macvim.orig/src/proto/misc1.pro
++++ macvim/src/proto/misc1.pro
 @@ -6,6 +6,7 @@ int get_indent_str __ARGS((char_u *ptr, 
  int set_indent __ARGS((int size, int flags));
  int get_number_indent __ARGS((linenr_T lnum));
@@ -827,20 +827,20 @@ Index: b/src/proto/misc1.pro
  int get_leader_len __ARGS((char_u *line, char_u **flags, int backward, int include_space));
  int get_last_leader_offset __ARGS((char_u *line, char_u **flags));
  int plines __ARGS((linenr_T lnum));
-Index: b/src/regexp.c
+Index: macvim/src/regexp.c
 ===================================================================
---- a/src/regexp.c
-+++ b/src/regexp.c
-@@ -4269,7 +4269,7 @@ regmatch(scan)
- 		    if (top.col == MAXCOL || bot.col == MAXCOL)
- 			end = MAXCOL;
- 		    cols = win_linetabsize(wp,
--				      regline, (colnr_T)(reginput - regline));
-+				      regline, (colnr_T)(reginput - regline), reglnum + reg_firstlnum);
- 		    if (cols < start || cols > end - (*p_sel == 'e'))
- 			status = RA_NOMATCH;
- 		}
-@@ -4293,7 +4293,7 @@ regmatch(scan)
+--- macvim.orig/src/regexp.c
++++ macvim/src/regexp.c
+@@ -4252,7 +4252,7 @@ reg_match_visual()
+ 	    end = end2;
+ 	if (top.col == MAXCOL || bot.col == MAXCOL)
+ 	    end = MAXCOL;
+-	cols = win_linetabsize(wp, regline, (colnr_T)(reginput - regline));
++	cols = win_linetabsize(wp, regline, (colnr_T)(reginput - regline), reglnum + reg_firstlnum);
+ 	if (cols < start || cols > end - (*p_sel == 'e'))
+ 	    return FALSE;
+     }
+@@ -4460,7 +4460,7 @@ regmatch(scan)
  	  case RE_VCOL:
  	    if (!re_num_cmp((long_u)win_linetabsize(
  			    reg_win == NULL ? curwin : reg_win,
@@ -849,11 +849,11 @@ Index: b/src/regexp.c
  		status = RA_NOMATCH;
  	    break;
  
-Index: b/src/screen.c
+Index: macvim/src/screen.c
 ===================================================================
---- a/src/screen.c
-+++ b/src/screen.c
-@@ -2815,10 +2815,15 @@ win_line(wp, lnum, startrow, endrow, noc
+--- macvim.orig/src/screen.c
++++ macvim/src/screen.c
+@@ -2974,10 +2974,15 @@ win_line(wp, lnum, startrow, endrow, noc
  # define WL_SIGN	WL_FOLD		/* column for signs */
  #endif
  #define WL_NR		WL_SIGN + 1	/* line number */
@@ -871,7 +871,7 @@ Index: b/src/screen.c
  #endif
  #define WL_LINE		WL_SBR + 1	/* text in the line */
      int		draw_state = WL_START;	/* what to draw next */
-@@ -3149,7 +3154,7 @@ win_line(wp, lnum, startrow, endrow, noc
+@@ -3316,7 +3321,7 @@ win_line(wp, lnum, startrow, endrow, noc
  #endif
  	while (vcol < v && *ptr != NUL)
  	{
@@ -880,11 +880,11 @@ Index: b/src/screen.c
  	    vcol += c;
  #ifdef FEAT_MBYTE
  	    prev_ptr = ptr;
-@@ -3519,6 +3524,30 @@ win_line(wp, lnum, startrow, endrow, noc
+@@ -3698,6 +3703,30 @@ win_line(wp, lnum, startrow, endrow, noc
  		}
  	    }
  
-+#ifdef FEAT_LINEBREAK 
++#ifdef FEAT_LINEBREAK
 +	    /* draw 'breakindent': indent wrapped text accordingly */
 +	    if (draw_state == WL_BRI -1 && n_extra == 0){
 +		draw_state = WL_BRI;
@@ -906,12 +906,12 @@ Index: b/src/screen.c
 +		}
 +	    }
 +#endif
-+	    
++
 +
  #if defined(FEAT_LINEBREAK) || defined(FEAT_DIFF)
  	    if (draw_state == WL_SBR - 1 && n_extra == 0)
  	    {
-@@ -4225,7 +4254,7 @@ win_line(wp, lnum, startrow, endrow, noc
+@@ -4409,7 +4438,7 @@ win_line(wp, lnum, startrow, endrow, noc
  # ifdef FEAT_MBYTE
  				has_mbyte ? mb_l :
  # endif
@@ -919,12 +919,12 @@ Index: b/src/screen.c
 +				1), (colnr_T)vcol, NULL, lnum) - 1;
  		    c_extra = ' ';
  		    if (vim_iswhite(c))
- 			c = ' ';
-Index: b/src/structs.h
+ 		    {
+Index: macvim/src/structs.h
 ===================================================================
---- a/src/structs.h
-+++ b/src/structs.h
-@@ -133,6 +133,14 @@ typedef struct
+--- macvim.orig/src/structs.h
++++ macvim/src/structs.h
+@@ -134,6 +134,14 @@ typedef struct
      int		wo_arab;
  # define w_p_arab w_onebuf_opt.wo_arab	/* 'arabic' */
  #endif
@@ -939,11 +939,11 @@ Index: b/src/structs.h
  #ifdef FEAT_DIFF
      int		wo_diff;
  # define w_p_diff w_onebuf_opt.wo_diff	/* 'diff' */
-Index: b/src/ui.c
+Index: macvim/src/ui.c
 ===================================================================
---- a/src/ui.c
-+++ b/src/ui.c
-@@ -3155,7 +3155,7 @@ vcol2col(wp, lnum, vcol)
+--- macvim.orig/src/ui.c
++++ macvim/src/ui.c
+@@ -3196,7 +3196,7 @@ vcol2col(wp, lnum, vcol)
      start = ptr = ml_get_buf(wp->w_buffer, lnum, FALSE);
      while (count < vcol && *ptr != NUL)
      {
